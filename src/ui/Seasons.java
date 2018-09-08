@@ -15,7 +15,18 @@ public class Seasons {
         lineBreaker();
         Teams.makeTeamEdm();
         Players.makePlayers();
-
+        lineBreaker();
+        Teams.makeTeamWin();
+        Players.makePlayers();
+        lineBreaker();
+        Teams.makeTeamHal();
+        Players.makePlayers();
+        lineBreaker();
+        Teams.makeTeamSas();
+        Players.makePlayers();
+        lineBreaker();
+        Teams.makeTeamOtt();
+        Players.makePlayers();
     }
 
     private static void makeSeason(){
