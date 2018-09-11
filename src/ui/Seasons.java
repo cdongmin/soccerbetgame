@@ -4,28 +4,28 @@ public class Seasons {
     public static void main(String[] args) {
         makeSeason();
         lineBreaker();
-        Teams.makeTeamVan();
+        Team.makeTeamVan();
         Players.makePlayers();
         lineBreaker();
-        Teams.makeTeamTor();
+        Team.makeTeamTor();
         Players.makePlayers();
         lineBreaker();
-        Teams.makeTeamCal();
+        Team.makeTeamCal();
         Players.makePlayers();
         lineBreaker();
-        Teams.makeTeamEdm();
+        Team.makeTeamEdm();
         Players.makePlayers();
         lineBreaker();
-        Teams.makeTeamWin();
+        Team.makeTeamWin();
         Players.makePlayers();
         lineBreaker();
-        Teams.makeTeamHal();
+        Team.makeTeamHal();
         Players.makePlayers();
         lineBreaker();
-        Teams.makeTeamSas();
+        Team.makeTeamSas();
         Players.makePlayers();
         lineBreaker();
-        Teams.makeTeamOtt();
+        Team.makeTeamOtt();
         Players.makePlayers();
     }
 

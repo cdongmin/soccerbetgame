@@ -1,7 +1,17 @@
 package ui;
 
-public class Teams {
+import java.awt.Color;
+
+public class Team {
+    private String teamName;
+    private String color;
+
+    public Team(String teamName){
+        this.teamName = teamName;
+    }
+
     public static void makeTeamVan(){
+        //setColor(green);
         System.out.println("Vancouver Greens");
     }
     public static void makeTeamTor(){
