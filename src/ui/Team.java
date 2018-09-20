@@ -1,39 +1,34 @@
 package ui;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Team {
     private String teamName;
-    private String color;
+    private Color teamColor;
+    private ArrayList<Player> players;
 
-    public Team(String teamName){
+    public Team(String teamName, Color teamColor){
         this.teamName = teamName;
+        this.teamColor = teamColor;
     }
 
-    public static void makeTeamVan(){
-        //setColor(green);
-        System.out.println("Vancouver Greens");
-    }
-    public static void makeTeamTor(){
-        System.out.println("Toronto Blues");
-    }
-    public static void makeTeamCal(){
-        System.out.println("Calgary Reds");
-    }
-    public static void makeTeamEdm(){
-        System.out.println("Edmonton Oranges");
-    }
-    public static void makeTeamWin(){
-        System.out.println("Winnipeg Purples");
-    }
-    public static void makeTeamHal(){
-        System.out.println("Halifax Browns");
-    }
-    public static void makeTeamSas(){
-        System.out.println("Saskatoon Yellows");
-    }
-    public static void makeTeamOtt(){
-        System.out.println("Ottawa Greys");
+    public String getTeamName(Team team){
+        return team.teamName;
     }
 
+    public void printTeam(){
+        System.out.println(teamName);
+        System.out.println(teamColor);
+    }
+
+    public void assignTeam(Player newPlayer){
+        players.add(newPlayer);
+    }
+
+    public void printTeamPlayers(){
+        for(Player player:players){
+            System.out.println(player);
+        }
+    }
 }
