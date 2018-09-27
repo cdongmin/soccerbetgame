@@ -1,10 +1,11 @@
 package ui;
 
 import java.util.Scanner;
+
 import ui.Team;
 
 public class Player {
-    private String playerName;
+    public String playerName;
     private int age;
     private int backNumber;
     private String position;
@@ -14,11 +15,14 @@ public class Player {
 
     Scanner scanner = new Scanner(System.in);
 
-    public Player(String playerName, int age, int backNumber, String position){
+    public Player(String playerName, int age, int backNumber, String position) {
         this.playerName = playerName;
         this.age = age;
         this.backNumber = backNumber;
         this.position = position;
+        numApperances = 0;
+        numGoals = 0;
+        numAssists = 0;
     }
 
 }
