@@ -18,14 +18,16 @@ public class Bet {
         }
     }
 
+    //EFFECTS: returns amount of coins
     public int getAmount(){
         return amount;
     }
 
+    //EFFECTS: prints the remaining amount of coins
     public void betting() {
         int betAmount = scanner.nextInt();
         if (betAmount > amount) {
-            System.out.println("Insufficient coins :(");
+            System.out.println("Insufficient coins");
         } else {
             amount = amount - betAmount;
             System.out.println("Your remaining number of coins is: " + amount + "coins");
