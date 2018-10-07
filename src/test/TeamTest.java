@@ -46,22 +46,4 @@ public class TeamTest {
         assertEquals(p, t.returnOneTeamPlayer(1));
     }
 
-    @Test
-    public void testSave() throws IOException {
-        ArrayList<Team> teams = new ArrayList<>();
-        teams.add(t);
-        save(teams);
-        List<String> lines = Files.readAllLines(Paths.get("outputfile.txt"));
-        assertEquals("aTeam", lines.get(0));
-    }
-
-    @Test
-    public void testLoad() throws IOException{
-        ArrayList<Team> teams = new ArrayList<>();
-        teams.add(t);
-        save(teams);
-        load();
-        List<String> lines = Files.readAllLines(Paths.get("outputfile.txt"));
-        assertEquals("aTeam", lines.get(0));
-    }
 }

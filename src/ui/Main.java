@@ -101,25 +101,24 @@ public class Main {
                 Team t = lookForTeam(selectTeam, teams);
 
                 System.out.println("How much money do you want to bet?");
-                bet.betting();
+                int betAmount = scanner.nextInt();
+                bet.betting(betAmount);
             } else if (option == 2) {
                 System.out.println("Your balance is: " + bet.getAmount() + "coins :)");
             } else if (option == 3) {
                 break;
             }
         }
-        save(teams);
+        save(bet);
         load();
 
     }
-    public static void save(ArrayList<Team> teams) throws IOException {
+    public static void save(Bet bet) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get("inputfile.txt"));
         PrintWriter writer = new PrintWriter("outputfile.txt", "UTF-8");
-        for(Team team: teams) {
-            lines.add(team.getTeamName());
-        }
+        lines.add(Integer.toString(bet.getAmount()));
         for (String line : lines) {
-            System.out.println("Team: " + line);
+            System.out.println("Your current number of coins: " + line);
             writer.println(line);
         }
         writer.close(); //note -- if you miss this, the file will not be written at all.

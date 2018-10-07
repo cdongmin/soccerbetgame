@@ -24,8 +24,7 @@ public class Bet {
     }
 
     //EFFECTS: prints the remaining amount of coins
-    public void betting() {
-        int betAmount = scanner.nextInt();
+    public void betting(int betAmount) {
         if (betAmount > amount) {
             System.out.println("Insufficient coins");
         } else {
