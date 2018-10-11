@@ -1,10 +1,10 @@
 package ui;
 
+import model.*;
+
 import java.awt.*;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -19,8 +19,7 @@ public class Main {
         Season season = new CurrentSeason();
         season.makeSeason(2018);
 
-        Greeting greeting = new NiceGreeting();
-        greeting.greet();
+        System.out.println("Welcome!");
         lineBreaker();
 
         System.out.println("===Participating Teams===");
@@ -98,8 +97,7 @@ public class Main {
             if (option == 1) {
                 System.out.println("Select the team you want to bet on:");
                 String selectTeam = scanner.nextLine();
-                Team t = lookForTeam(selectTeam, teams);
-
+                Team tt = lookForTeam(selectTeam, teams);
                 System.out.println("How much money do you want to bet?");
                 int betAmount = scanner.nextInt();
                 bet.betting(betAmount);
@@ -112,7 +110,15 @@ public class Main {
         save(bet);
         load();
 
+        System.out.println("Select a team:");
+        String input = scanner.nextLine();
+        Team t = lookForTeam(input, teams);
+        System.out.println("Select a player on the team:");
+        String input2 = scanner.nextLine();
+        Player p = lookForPlayer(input2, t);
+        p.run();
     }
+
     public static void save(Bet bet) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get("inputfile.txt"));
         PrintWriter writer = new PrintWriter("outputfile.txt", "UTF-8");
@@ -124,14 +130,8 @@ public class Main {
         writer.close(); //note -- if you miss this, the file will not be written at all.
     }
 
-    public static void load(){
+    public static void load() {
         Paths.get("outputfile.txt");
-    }
-
-
-    public static ArrayList<String> splitOnSpace(String line) {
-        String[] splits = line.split(" ");
-        return new ArrayList<>(Arrays.asList(splits));
     }
 
     private static void lineBreaker() {
@@ -145,5 +145,14 @@ public class Main {
                 returnTeam = team;
         }
         return returnTeam;
+    }
+
+    private static Player lookForPlayer(String input, Team team) {
+        Player aPlayer = null;
+        for (Player player : team.getPlayers()) {
+            if (Objects.equals(input, player.getPlayerName()))
+                aPlayer = player;
+        }
+        return aPlayer;
     }
 }

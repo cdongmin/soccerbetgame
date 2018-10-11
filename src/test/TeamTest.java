@@ -1,22 +1,15 @@
 package test;
 
 import org.junit.jupiter.api.BeforeEach;
-import ui.Player;
-import ui.Team;
+import model.Player;
+import model.Team;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static ui.Main.load;
-import static ui.Main.save;
 
 public class TeamTest {
     private String aTeamName = "aTeam";

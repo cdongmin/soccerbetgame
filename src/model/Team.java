@@ -1,4 +1,4 @@
-package ui;
+package model;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -12,24 +12,28 @@ public class Team {
     //REQUIRES: non-null parameters
     //MODIFIES: this
     //EFFECTS: makes a new team
-    public Team(String teamName, Color teamColor){
+    public Team(String teamName, Color teamColor) {
         this.teamName = teamName;
         this.teamColor = teamColor;
         players = new ArrayList<>();
     }
 
     //EFFECTS: returns name of the team
-    public String getTeamName(){
+    public String getTeamName() {
         return teamName;
     }
 
     //EFFECTS: returns color of the team
-    public Color getColor(){
+    public Color getColor() {
         return teamColor;
     }
 
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
     //EFFECTS: prints out name of team in color
-    public void printTeam(){
+    public void printTeam() {
         System.out.println(teamName);
         System.out.println(teamColor);
     }
@@ -37,23 +41,23 @@ public class Team {
     //REQUIRES: non-null parameter
     //MODIFIES: this
     //EFFECTS: assigns a player to a team
-    public void assignTeam(Player newPlayer){
+    public void assignTeam(Player newPlayer) {
         players.add(newPlayer);
     }
 
     //EFFECTS: prints out all players in a team
-    public void printTeamPlayers(){
-        for(Player player:players){
-            System.out.println(player.playerName);
+    public void printTeamPlayers() {
+        for (Player player : players) {
+            System.out.println(player.getPlayerName());
         }
     }
 
     //REQUIRES: non-null parameter
     //EFFECTS: returns a specific player of team
-    public Player returnOneTeamPlayer(int number){
+    public Player returnOneTeamPlayer(int number) {
         Player p = null;
-        for(int i = 0;i<=players.size();i++){
-            if (number-1 == i){
+        for (int i = 0; i <= players.size(); i++) {
+            if (number - 1 == i) {
                 p = players.get(i);
             }
         }
