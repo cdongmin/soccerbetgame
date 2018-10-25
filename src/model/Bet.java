@@ -1,5 +1,7 @@
 package model;
 
+import Exceptions.OutOfMoneyException;
+
 import java.util.Scanner;
 
 public class Bet {
@@ -24,9 +26,9 @@ public class Bet {
     }
 
     //EFFECTS: prints the remaining amount of coins
-    public void betting(int betAmount) {
+    public void betting(int betAmount) throws OutOfMoneyException  {
         if (betAmount > amount) {
-            System.out.println("Insufficient coins");
+            throw new OutOfMoneyException();
         } else {
             amount = amount - betAmount;
             System.out.println("Your remaining number of coins is: " + amount + "coins");

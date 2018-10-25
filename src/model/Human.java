@@ -5,6 +5,4 @@ public abstract class Human {
         System.out.println("I am running!");
     }
 
-    public abstract void scoreGoal();
-
 }

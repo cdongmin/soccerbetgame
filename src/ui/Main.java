@@ -1,5 +1,9 @@
 package ui;
 
+import Exceptions.InvalidInputException;
+import Exceptions.NothingFoundException;
+import Exceptions.OutOfMoneyException;
+import Exceptions.WrongChoiceException;
 import model.*;
 
 import java.awt.*;
@@ -13,7 +17,7 @@ import java.util.List;
 public class Main {
     private static ArrayList<Team> teams = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InvalidInputException {
         Scanner scanner = new Scanner(System.in);
 
         Season season = new CurrentSeason();
@@ -38,10 +42,10 @@ public class Main {
 
         Team toronto = new Team("Toronto Blues", Color.blue);
         teams.add(toronto);
-        Player player5 = new Player("John Terry", 37, 26, "Defender");
-        Player player6 = new Player("Frank Lampard", 40, 8, "Midfielder");
-        Player player7 = new Player("Didier Drogba", 40, 11, "Attacker");
-        Player player8 = new Player("Petr Cech", 36, 1, "Goalkeeper");
+        Player player5 = new Player("Blues Defender", 37, 26, "Defender");
+        Player player6 = new Player("Blues Midfielder", 40, 8, "Midfielder");
+        Player player7 = new Player("Blues Attacker", 40, 11, "Attacker");
+        Player player8 = new Player("Blues Goalkeeper", 36, 1, "Goalkeeper");
         toronto.printTeam();
         toronto.assignTeam(player7);
         toronto.assignTeam(player6);
@@ -51,10 +55,10 @@ public class Main {
 
         Team vancouver = new Team("Vancouver Greens", Color.green);
         teams.add(vancouver);
-        Player player9 = new Player("Alphonso Davies", 17, 67, "Midfielder");
-        Player player10 = new Player("Yordy Reyna", 25, 29, "Attacker");
-        Player player11 = new Player("Kendall Waston", 30, 4, "Defender");
-        Player player12 = new Player("Stefan Marinovic", 26, 1, "Goalkeeper");
+        Player player9 = new Player("Greens Midfielder", 17, 67, "Midfielder");
+        Player player10 = new Player("Greens Attacker", 25, 29, "Attacker");
+        Player player11 = new Player("Greens Defender", 30, 4, "Defender");
+        Player player12 = new Player("Greens Goalkeeper", 26, 1, "Goalkeeper");
         vancouver.printTeam();
         vancouver.assignTeam(player10);
         vancouver.assignTeam(player9);
@@ -64,10 +68,10 @@ public class Main {
 
         Team edmonton = new Team("Edmonton Oranges", Color.orange);
         teams.add(edmonton);
-        Player player13 = new Player("Jorginho", 26, 5, "Midfielder");
-        Player player14 = new Player("Lorenzo Insigne", 27, 24, "Attacker");
-        Player player15 = new Player("Kalidou Koulibaly", 27, 26, "Defender");
-        Player player16 = new Player("Kepa", 23, 1, "Goalkeeper");
+        Player player13 = new Player("Oranges Midfielder", 26, 5, "Midfielder");
+        Player player14 = new Player("Oranges Attacker", 27, 24, "Attacker");
+        Player player15 = new Player("Oranges Defender", 27, 26, "Defender");
+        Player player16 = new Player("Oranges Goalkeeper", 23, 1, "Goalkeeper");
         edmonton.assignTeam(player14);
         edmonton.assignTeam(player13);
         edmonton.assignTeam(player15);
@@ -77,11 +81,25 @@ public class Main {
 
         while (true) {
             System.out.println("Would like to view team information? (Answer Y OR N)");
-            String yesOrNo = scanner.nextLine();
+            String yesOrNo = null;
+            try {
+                yesOrNo = scanner.nextLine();
+                if (!(yesOrNo.equals("Y") || yesOrNo.equals("N"))) {
+                    throw new InvalidInputException();
+                }
+            } catch (InvalidInputException e) {
+                System.out.println("Invalid input. Please try again");
+            }
             if (yesOrNo.equals("Y")) {
                 System.out.print("Select a team: ");
                 String input = scanner.nextLine();
-                Team t = lookForTeam(input, teams);
+                Team t;
+                try {
+                    t = lookForTeam(input, teams);
+                } catch (InvalidInputException e) {
+                    System.out.println("That team does not exist");
+                    continue;
+                }
                 t.printTeamPlayers();
             }
             if (yesOrNo.equals("N")) {
@@ -92,39 +110,53 @@ public class Main {
         Bet bet = new Bet();
         while (true) {
             System.out.println("1.Bet 2.See Balance 3.Exit");
-            int option = scanner.nextInt();
+            int option = 0;
+            try {
+                option = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                scanner.next();
+            }
             scanner.nextLine();
             if (option == 1) {
-                System.out.println("Select the team you want to bet on:");
+                System.out.print("Select the team you want to bet on: ");
                 String selectTeam = scanner.nextLine();
-                Team tt = lookForTeam(selectTeam, teams);
+                try {
+                    Team tt = lookForTeam(selectTeam, teams);
+                } catch (InvalidInputException e) {
+                    System.out.println("That team does not exist");
+                    continue;
+                }
                 System.out.println("How much money do you want to bet?");
                 int betAmount = scanner.nextInt();
-                bet.betting(betAmount);
+                try {
+                    bet.betting(betAmount);
+                } catch (OutOfMoneyException e) {
+                    System.out.println("Insufficient coins");
+                } finally {
+                    System.out.println("Please continue");
+                }
             } else if (option == 2) {
                 System.out.println("Your balance is: " + bet.getAmount() + "coins :)");
             } else if (option == 3) {
                 break;
-            }
+            } else
+                try {
+                    throw new WrongChoiceException();
+                } catch (InvalidInputException e) {
+                    System.out.println("Wrong choice. Please try again");
+                }
         }
         save(bet);
         load();
 
-        System.out.println("Select a team:");
-        String input = scanner.nextLine();
-        Team t = lookForTeam(input, teams);
-        System.out.println("Select a player on the team:");
-        String input2 = scanner.nextLine();
-        Player p = lookForPlayer(input2, t);
-        p.run();
+
     }
 
     public static void save(Bet bet) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get("inputfile.txt"));
         PrintWriter writer = new PrintWriter("outputfile.txt", "UTF-8");
-        lines.add(Integer.toString(bet.getAmount()));
+        lines.add("Your current number of coins: " + Integer.toString(bet.getAmount()));
         for (String line : lines) {
-            System.out.println("Your current number of coins: " + line);
             writer.println(line);
         }
         writer.close(); //note -- if you miss this, the file will not be written at all.
@@ -138,20 +170,27 @@ public class Main {
         System.out.println("");
     }
 
-    private static Team lookForTeam(String input, ArrayList<Team> teams) {
+    private static Team lookForTeam(String input, ArrayList<Team> teams) throws NothingFoundException {
         Team returnTeam = null;
         for (Team team : teams) {
-            if (Objects.equals(input, team.getTeamName()))
+            if (Objects.equals(input, team.getTeamName())) {
                 returnTeam = team;
+            }
+        }
+        if (returnTeam == null) {
+            throw new NothingFoundException();
         }
         return returnTeam;
     }
 
-    private static Player lookForPlayer(String input, Team team) {
+    private static Player lookForPlayer(String input, Team team) throws NothingFoundException {
         Player aPlayer = null;
         for (Player player : team.getPlayers()) {
             if (Objects.equals(input, player.getPlayerName()))
                 aPlayer = player;
+        }
+        if (aPlayer == null) {
+            throw new NothingFoundException();
         }
         return aPlayer;
     }
