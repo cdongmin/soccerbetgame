@@ -1,5 +1,6 @@
 package test;
 
+import Exceptions.InvalidInputException;
 import Exceptions.OutOfMoneyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,26 +28,26 @@ public class TestBet {
     public void testSave() throws IOException {
         try {
             bet.betting(2000);
-        } catch (OutOfMoneyException e) {
+        } catch (Exception e) {
             fail("no");
         }
         save(bet);
         List<String> lines = Files.readAllLines(Paths.get("outputfile.txt"));
-        assertEquals("8000", lines.get(0));
+        assertEquals("Your current number of coins: 8000", lines.get(0));
     }
 
     @Test
     public void testLoad() throws IOException {
         try {
             bet.betting(5000);
-        } catch (OutOfMoneyException e) {
+        } catch (Exception e) {
             fail("no");
 
         }
         save(bet);
         load();
         List<String> lines = Files.readAllLines(Paths.get("outputfile.txt"));
-        assertEquals("5000", lines.get(0));
+        assertEquals("Your current number of coins: 5000", lines.get(0));
     }
 
     @Test
@@ -56,6 +57,8 @@ public class TestBet {
             fail("no");
         } catch (OutOfMoneyException e) {
             System.out.println("No money");
+        } catch (InvalidInputException e) {
+            fail("no");
         }
     }
 }

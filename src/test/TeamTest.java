@@ -34,9 +34,9 @@ public class TeamTest {
 
     @Test
     public void testAssignTeam() {
-        p = new Player(aPlayerName, anAge, aNumber, aPosition);
-        t.assignTeam(p);
-        assertEquals(p, t.returnOneTeamPlayer(1));
+        p = new Player(t,aNumber,aPlayerName, anAge, aPosition);
+        t.addPlayer(p);
+        assertTrue(t.getPlayers().contains(p));
     }
 
 }

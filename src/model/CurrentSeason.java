@@ -1,9 +1,13 @@
 package model;
 
-import model.Season;
+public class CurrentSeason {
+    private int year;
 
-public class CurrentSeason implements Season {
-    public void makeSeason(int year){
-        System.out.println("Season: "+year);
+    public CurrentSeason(int year) {
+        this.year = year;
+    }
+
+    public void makeSeason() {
+        System.out.println("Season: " + year);
     }
 }

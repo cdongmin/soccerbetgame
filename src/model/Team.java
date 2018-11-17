@@ -1,13 +1,16 @@
 package model;
 
+import Exceptions.NothingFoundException;
+
 import java.awt.Color;
-import java.util.ArrayList;
+import java.lang.reflect.Array;
+import java.util.*;
 
 
-public class Team {
+public class Team extends Component {
     private String teamName;
     private Color teamColor;
-    private ArrayList<Player> players;
+    protected HashSet<Player> players;
 
     //REQUIRES: non-null parameters
     //MODIFIES: this
@@ -15,8 +18,9 @@ public class Team {
     public Team(String teamName, Color teamColor) {
         this.teamName = teamName;
         this.teamColor = teamColor;
-        players = new ArrayList<>();
+        players = new HashSet<>();
     }
+
 
     //EFFECTS: returns name of the team
     public String getTeamName() {
@@ -28,7 +32,7 @@ public class Team {
         return teamColor;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public HashSet<Player> getPlayers() {
         return players;
     }
 
@@ -41,26 +45,33 @@ public class Team {
     //REQUIRES: non-null parameter
     //MODIFIES: this
     //EFFECTS: assigns a player to a team
-    public void assignTeam(Player newPlayer) {
-        players.add(newPlayer);
+    public void addPlayer(Player newPlayer) {
+        if (!players.contains(newPlayer)) {
+            players.add(newPlayer);
+        }
+    }
+
+    public void removePlayer(Player getRidOf) {
+        this.getPlayers().remove(getRidOf);
     }
 
     //EFFECTS: prints out all players in a team
     public void printTeamPlayers() {
         for (Player player : players) {
-            System.out.println(player.getPlayerName());
+            System.out.println("Name: " + player.getPlayerName() + " Number: " + player.getBackNumber());
         }
     }
 
-    //REQUIRES: non-null parameter
-    //EFFECTS: returns a specific player of team
-    public Player returnOneTeamPlayer(int number) {
-        Player p = null;
-        for (int i = 0; i <= players.size(); i++) {
-            if (number - 1 == i) {
-                p = players.get(i);
-            }
+    private Player lookForPlayer(String input) throws NothingFoundException {
+        Player aPlayer = null;
+        for (Player player : players) {
+            if (input.equals(player.getPlayerName()))
+                aPlayer = player;
         }
-        return p;
+        if (aPlayer == null) {
+            throw new NothingFoundException();
+        }
+        return aPlayer;
     }
+
 }

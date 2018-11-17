@@ -13,74 +13,102 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class Main {
-    private static ArrayList<Team> teams = new ArrayList<>();
-
-    public static void main(String[] args) throws IOException, InvalidInputException {
+    public static void main(String[] args) throws IOException {
+        League CanadaSoccerLeague = new League("Canada Soccer League");
         Scanner scanner = new Scanner(System.in);
 
-        Season season = new CurrentSeason();
-        season.makeSeason(2018);
+        BufferedReader br = null;
+        try {
+
+            URL url = new URL("https://www.ugrad.cs.ubc.ca/~cs210/2018w1/welcomemsg.html");
+            br = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String line;
+
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = br.readLine()) != null) {
+
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+
+            System.out.println(sb);
+        } finally {
+
+            if (br != null) {
+                br.close();
+            }
+        }
+
+        CurrentSeason season = new CurrentSeason(2018);
+        season.makeSeason();
 
         System.out.println("Welcome!");
         lineBreaker();
 
         System.out.println("===Participating Teams===");
         Team calgary = new Team("Calgary Reds", Color.red);
-        teams.add(calgary);
-        Player player1 = new Player("Min", 19, 5, "Defender");
-        Player player2 = new Player("Anna", 20, 7, "Midfielder");
-        Player player3 = new Player("Alan", 19, 9, "Attacker");
-        Player player4 = new Player("Louis", 19, 1, "Goalkeeper");
+        CanadaSoccerLeague.addTeam(calgary);
+        Player player1 = new Player(calgary, 5, "Min", 19, "Defender");
+        Player player2 = new Player(calgary, 20, "Anna", 20, "Midfielder");
+        Player player3 = new Player(calgary, 9, "Alan", 19, "Attacker");
+        Player player4 = new Player(calgary, 1, "Louis", 19, "Goalkeeper");
         calgary.printTeam();
-        calgary.assignTeam(player3);
-        calgary.assignTeam(player2);
-        calgary.assignTeam(player1);
-        calgary.assignTeam(player4);
+        calgary.addPlayer(player1);
+        calgary.addPlayer(player2);
+        calgary.addPlayer(player3);
+        calgary.addPlayer(player4);
         lineBreaker();
 
         Team toronto = new Team("Toronto Blues", Color.blue);
-        teams.add(toronto);
-        Player player5 = new Player("Blues Defender", 37, 26, "Defender");
-        Player player6 = new Player("Blues Midfielder", 40, 8, "Midfielder");
-        Player player7 = new Player("Blues Attacker", 40, 11, "Attacker");
-        Player player8 = new Player("Blues Goalkeeper", 36, 1, "Goalkeeper");
+        CanadaSoccerLeague.addTeam(toronto);
+        Player player5 = new Player(toronto, 26, "Blues Defender", 37, "Defender");
+        Player player6 = new Player(toronto, 8, "Blues Midfielder", 40, "Midfielder");
+        Player player7 = new Player(toronto, 9, "Blues Attacker", 40, "Attacker");
+        Player player8 = new Player(toronto, 1, "Blues Goalkeeper", 36, "Goalkeeper");
         toronto.printTeam();
-        toronto.assignTeam(player7);
-        toronto.assignTeam(player6);
-        toronto.assignTeam(player5);
-        toronto.assignTeam(player8);
+        toronto.addPlayer(player5);
+        toronto.addPlayer(player6);
+        toronto.addPlayer(player7);
+        toronto.addPlayer(player8);
         lineBreaker();
 
         Team vancouver = new Team("Vancouver Greens", Color.green);
-        teams.add(vancouver);
-        Player player9 = new Player("Greens Midfielder", 17, 67, "Midfielder");
-        Player player10 = new Player("Greens Attacker", 25, 29, "Attacker");
-        Player player11 = new Player("Greens Defender", 30, 4, "Defender");
-        Player player12 = new Player("Greens Goalkeeper", 26, 1, "Goalkeeper");
+        CanadaSoccerLeague.addTeam(vancouver);
+        Player player9 = new Player(vancouver, 7, "Greens Midfielder", 17, "Midfielder");
+        Player player10 = new Player(vancouver, 11, "Greens Attacker", 25, "Attacker");
+        Player player11 = new Player(vancouver, 4, "Greens Defender", 30, "Defender");
+        Player player12 = new Player(vancouver, 1, "Greens Goalkeeper", 26, "Goalkeeper");
         vancouver.printTeam();
-        vancouver.assignTeam(player10);
-        vancouver.assignTeam(player9);
-        vancouver.assignTeam(player11);
-        vancouver.assignTeam(player12);
+        vancouver.addPlayer(player9);
+        vancouver.addPlayer(player10);
+        vancouver.addPlayer(player11);
+        vancouver.addPlayer(player12);
         lineBreaker();
 
         Team edmonton = new Team("Edmonton Oranges", Color.orange);
-        teams.add(edmonton);
-        Player player13 = new Player("Oranges Midfielder", 26, 5, "Midfielder");
-        Player player14 = new Player("Oranges Attacker", 27, 24, "Attacker");
-        Player player15 = new Player("Oranges Defender", 27, 26, "Defender");
-        Player player16 = new Player("Oranges Goalkeeper", 23, 1, "Goalkeeper");
-        edmonton.assignTeam(player14);
-        edmonton.assignTeam(player13);
-        edmonton.assignTeam(player15);
-        edmonton.assignTeam(player16);
+        CanadaSoccerLeague.addTeam(edmonton);
+        Player player13 = new Player(edmonton, 8, "Oranges Midfielder", 26, "Midfielder");
+        Player player14 = new Player(edmonton, 10, "Oranges Attacker", 27, "Attacker");
+        Player player15 = new Player(edmonton, 2, "Oranges Defender", 27, "Defender");
+        Player player16 = new Player(edmonton, 1, "Oranges Goalkeeper", 23, "Goalkeeper");
+        edmonton.addPlayer(player13);
+        edmonton.addPlayer(player14);
+        edmonton.addPlayer(player15);
+        edmonton.addPlayer(player16);
         edmonton.printTeam();
         lineBreaker();
 
         while (true) {
-            System.out.println("Would like to view team information? (Answer Y OR N)");
+            System.out.println("Would like to view team information? (Answer Y or N)");
             String yesOrNo = null;
             try {
                 yesOrNo = scanner.nextLine();
@@ -95,7 +123,7 @@ public class Main {
                 String input = scanner.nextLine();
                 Team t;
                 try {
-                    t = lookForTeam(input, teams);
+                    t = CanadaSoccerLeague.lookForTeam(input);
                 } catch (InvalidInputException e) {
                     System.out.println("That team does not exist");
                     continue;
@@ -107,7 +135,26 @@ public class Main {
             }
         }
 
-        Bet bet = new Bet();
+
+        System.out.println("Are you a new user? Answer Y or N)");
+        User user = null;
+        String answer = null;
+        try {
+            answer = scanner.nextLine();
+            if (!(answer.equals("Y") || answer.equals("N"))) {
+                throw new InvalidInputException();
+            }
+        } catch (InvalidInputException e) {
+            System.out.println("Invalid input. Please try again");
+        }
+        if (answer.equals("Y")) {
+            System.out.println("Please enter your name");
+            String userName = scanner.nextLine();
+            user = new User(userName);
+        }
+        //Implement when the input is N
+
+        Game bet = new Game();
         while (true) {
             System.out.println("1.Bet 2.See Balance 3.Exit");
             int option = 0;
@@ -118,10 +165,12 @@ public class Main {
             }
             scanner.nextLine();
             if (option == 1) {
+                bet.addObserver(user);
                 System.out.print("Select the team you want to bet on: ");
                 String selectTeam = scanner.nextLine();
                 try {
-                    Team tt = lookForTeam(selectTeam, teams);
+                    Team tt = CanadaSoccerLeague.lookForTeam(selectTeam);
+                    bet.setBetTeam(tt);
                 } catch (InvalidInputException e) {
                     System.out.println("That team does not exist");
                     continue;
@@ -130,8 +179,11 @@ public class Main {
                 int betAmount = scanner.nextInt();
                 try {
                     bet.betting(betAmount);
+                    bet.startGame();
                 } catch (OutOfMoneyException e) {
                     System.out.println("Insufficient coins");
+                } catch (InvalidInputException e) {
+                    System.out.println("Please bet at least one coin");
                 } finally {
                     System.out.println("Please continue");
                 }
@@ -143,7 +195,7 @@ public class Main {
                 try {
                     throw new WrongChoiceException();
                 } catch (InvalidInputException e) {
-                    System.out.println("Wrong choice. Please try again");
+                    System.out.println("Invalid input. Please try again");
                 }
         }
         save(bet);
@@ -169,29 +221,5 @@ public class Main {
     private static void lineBreaker() {
         System.out.println("");
     }
-
-    private static Team lookForTeam(String input, ArrayList<Team> teams) throws NothingFoundException {
-        Team returnTeam = null;
-        for (Team team : teams) {
-            if (Objects.equals(input, team.getTeamName())) {
-                returnTeam = team;
-            }
-        }
-        if (returnTeam == null) {
-            throw new NothingFoundException();
-        }
-        return returnTeam;
-    }
-
-    private static Player lookForPlayer(String input, Team team) throws NothingFoundException {
-        Player aPlayer = null;
-        for (Player player : team.getPlayers()) {
-            if (Objects.equals(input, player.getPlayerName()))
-                aPlayer = player;
-        }
-        if (aPlayer == null) {
-            throw new NothingFoundException();
-        }
-        return aPlayer;
-    }
 }
+
