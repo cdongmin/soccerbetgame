@@ -32,6 +32,10 @@ public class Bet extends UserManager {
         return betAmount;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     //EFFECTS: prints the remaining amount of coins
     public void betting(int betAmount) throws OutOfMoneyException, InvalidInputException {
         this.betAmount=betAmount;

@@ -1,6 +1,8 @@
 package model;
 
-public class User implements Observer{
+import java.io.Serializable;
+
+public class User implements Observer, Serializable{
     private String name;
 
     public User(String name){

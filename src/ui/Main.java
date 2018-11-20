@@ -7,16 +7,10 @@ import Exceptions.WrongChoiceException;
 import model.*;
 
 import java.awt.*;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Main {
@@ -136,23 +130,37 @@ public class Main {
         }
 
 
-        System.out.println("Are you a new user? Answer Y or N)");
+        UserManager userManager = new UserManager();
+        System.out.println("Are you a new user? (Answer Y or N)");
         User user = null;
         String answer = null;
         try {
             answer = scanner.nextLine();
-            if (!(answer.equals("Y") || answer.equals("N"))) {
+            if (!(answer.equals("Y") || (answer.equals("N")))) {
                 throw new InvalidInputException();
             }
         } catch (InvalidInputException e) {
             System.out.println("Invalid input. Please try again");
         }
-        if (answer.equals("Y")) {
-            System.out.println("Please enter your name");
-            String userName = scanner.nextLine();
-            user = new User(userName);
+        try {
+            userManager.setUsers(loadUser());
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
         }
-        //Implement when the input is N
+        System.out.println("Please enter your name");
+        String input = scanner.nextLine();
+        if (answer.equals("Y")) {
+            user = new User(input);
+            userManager.addUser(user);
+        } else {
+            try {
+                user = userManager.lookForUser(input);
+                //Implement if user is not in the list. -> Redirect
+            } catch (NothingFoundException e) {
+                System.out.println("That user does not exist.");
+            }
+        }
+        saveUser(userManager.getUsers());
 
         Game bet = new Game();
         while (true) {
@@ -166,6 +174,11 @@ public class Main {
             scanner.nextLine();
             if (option == 1) {
                 bet.addObserver(user);
+                try {
+                    bet.setAmount(loadBet());
+                } catch (ClassNotFoundException | IOException e) {
+                    e.printStackTrace();
+                }
                 System.out.print("Select the team you want to bet on: ");
                 String selectTeam = scanner.nextLine();
                 try {
@@ -176,14 +189,19 @@ public class Main {
                     continue;
                 }
                 System.out.println("How much money do you want to bet?");
-                int betAmount = scanner.nextInt();
                 try {
+                    int betAmount = scanner.nextInt();
                     bet.betting(betAmount);
                     bet.startGame();
+                    saveAmount(bet);
+                    saveBetStats(user, bet);
                 } catch (OutOfMoneyException e) {
                     System.out.println("Insufficient coins");
                 } catch (InvalidInputException e) {
                     System.out.println("Please bet at least one coin");
+                } catch (InputMismatchException e) {
+                    System.out.println("Please enter an integer greater than 0");
+                    scanner.nextLine();
                 } finally {
                     System.out.println("Please continue");
                 }
@@ -198,24 +216,44 @@ public class Main {
                     System.out.println("Invalid input. Please try again");
                 }
         }
-        save(bet);
-        load();
 
 
     }
 
-    public static void save(Bet bet) throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get("inputfile.txt"));
-        PrintWriter writer = new PrintWriter("outputfile.txt", "UTF-8");
-        lines.add("Your current number of coins: " + Integer.toString(bet.getAmount()));
-        for (String line : lines) {
-            writer.println(line);
-        }
-        writer.close(); //note -- if you miss this, the file will not be written at all.
+    public static void saveUser(List<User> users) throws IOException {
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("userlist.txt"));
+        out.writeObject(users);
+        out.close();
     }
 
-    public static void load() {
-        Paths.get("outputfile.txt");
+    public static List<User> loadUser() throws IOException, ClassNotFoundException {
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream("userlist.txt"));
+        List<User> users = (List<User>) in.readObject();
+        in.close();
+        return users;
+    }
+
+    public static void saveAmount(Bet bet) throws IOException {
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("bet.txt"));
+        out.writeObject(bet.getAmount());
+        out.close();
+    }
+
+    public static int loadBet() throws IOException, ClassNotFoundException {
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream("bet.txt"));
+        int amount = (int) in.readObject();
+        in.close();
+        return amount;
+    }
+
+    public static void saveBetStats(User user, Bet bet) throws IOException {
+        PrintWriter out = new PrintWriter(new FileOutputStream("betstats.txt", true));
+        out.println(user.getName() + "'s number of coins: " + bet.getAmount());
+        out.close();
+    }
+
+    public static void loadBetStats() {
+        Paths.get("betstats.txt");
     }
 
     private static void lineBreaker() {
