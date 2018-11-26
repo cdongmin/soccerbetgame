@@ -7,11 +7,10 @@ import java.util.Scanner;
 
 public class Bet extends UserManager {
     private final int INITIAL_AMOUNT = 10000;
-    private int amount;
+    protected int amount;
     private int betAmount;
     private int multiplier;
-    protected Team betTeam;
-    protected Team oppositionTeam;
+    private Team betTeam;
 
     Scanner scanner = new Scanner(System.in);
 

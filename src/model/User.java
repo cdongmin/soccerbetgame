@@ -24,8 +24,8 @@ public class User implements Observer, Serializable{
 
     @Override
     public void updateResult(Game bet){
-        if(bet.isWonOrNot())
-            System.out.println(getName()+" won "+bet.getBetAmount()*2+" coins.");
+        if(bet.wonOrNot)
+            System.out.println(getName()+" won "+bet.getBetAmount()+" coins.");
         else
             System.out.println(getName()+" lost "+bet.getBetAmount()+" coins. ");
     }

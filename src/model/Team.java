@@ -3,19 +3,14 @@ package model;
 import Exceptions.NothingFoundException;
 
 import java.awt.Color;
-import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 
-public class Team implements Serializable, Comparable<Team> {
+public class Team extends Component {
     private String teamName;
     private Color teamColor;
-    private HashSet<Player> players;
-    private File playersStats;
-    private int points;
-    private File pointsStats;
-    private int standing;
-    private static final long serialVersionUID = -6293520643154234138L;
+    protected HashSet<Player> players;
 
     //REQUIRES: non-null parameters
     //MODIFIES: this
@@ -24,9 +19,6 @@ public class Team implements Serializable, Comparable<Team> {
         this.teamName = teamName;
         this.teamColor = teamColor;
         players = new HashSet<>();
-        playersStats = new File(teamName + "PlayerStats");
-        points = 0;
-        pointsStats = new File(teamName + "Points");
     }
 
 
@@ -42,34 +34,6 @@ public class Team implements Serializable, Comparable<Team> {
 
     public HashSet<Player> getPlayers() {
         return players;
-    }
-
-    public void setPlayers(HashSet<Player> players) {
-        this.players = players;
-    }
-
-    public File getPlayersStats() {
-        return playersStats;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public File getPointsStats() {
-        return pointsStats;
-    }
-
-    public int getStanding() {
-        return standing;
-    }
-
-    public void setStanding(int standing) {
-        this.standing = standing;
     }
 
     //EFFECTS: prints out name of team in color
@@ -112,23 +76,4 @@ public class Team implements Serializable, Comparable<Team> {
         return aPlayer;
     }
 
-    @Override
-    public int compareTo(Team team) {
-        return Integer.compare(team.points,this.points);
-    }
-
-
-    public void savePointsStats() throws IOException{
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(this.getPointsStats()));
-        out.writeObject(this.getPoints());
-        out.close();
-    }
-
-
-    public int loadPointsStats() throws IOException, ClassNotFoundException {
-        ObjectInputStream in = new ObjectInputStream(new FileInputStream(this.getPointsStats()));
-        int points = (int) in.readObject();
-        in.close();
-        return points;
-    }
 }

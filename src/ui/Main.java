@@ -4,49 +4,39 @@ import Exceptions.InvalidInputException;
 import Exceptions.NothingFoundException;
 import Exceptions.OutOfMoneyException;
 import Exceptions.WrongChoiceException;
-import GUI.MainFrame;
 import model.*;
 
-import java.awt.event.*;
-import javax.swing.event.*;
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.net.URL;
 
-public class Main extends JFrame {
-    private JLabel jLabel;
-    private JTextField jTextField;
-
+public class Main {
     public static void main(String[] args) throws IOException {
-        JFrame mainFrame = new JFrame();
-        mainFrame.setTitle("Canada Soccer League Bet");
-        mainFrame.setSize(2000, 450);
-        mainFrame.setVisible(true);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        mainFrame.setLayout(new FlowLayout());
-        //MainFrame mainFrame = new MainFrame();
-        Standings CanadaSoccerLeague = new Standings();
-        CanadaSoccerLeague.setName("Canada Soccer League");
+        League CanadaSoccerLeague = new League("Canada Soccer League");
         Scanner scanner = new Scanner(System.in);
 
-        //Gets data from web
         BufferedReader br = null;
         try {
+
             URL url = new URL("https://www.ugrad.cs.ubc.ca/~cs210/2018w1/welcomemsg.html");
             br = new BufferedReader(new InputStreamReader(url.openStream()));
+
             String line;
+
             StringBuilder sb = new StringBuilder();
+
             while ((line = br.readLine()) != null) {
+
                 sb.append(line);
                 sb.append(System.lineSeparator());
             }
+
             System.out.println(sb);
         } finally {
+
             if (br != null) {
                 br.close();
             }
@@ -55,20 +45,17 @@ public class Main extends JFrame {
         CurrentSeason season = new CurrentSeason(2018);
         season.makeSeason();
 
-        JLabel welcome = new JLabel("Welcome!");
-        mainFrame.add(welcome);
+        System.out.println("Welcome!");
         lineBreaker();
 
-        JLabel introduce = new JLabel("===Participating Teams===");
+        System.out.println("===Participating Teams===");
         Team calgary = new Team("Calgary Reds", Color.red);
         CanadaSoccerLeague.addTeam(calgary);
         Player player1 = new Player(calgary, 5, "Min", 19, "Defender");
         Player player2 = new Player(calgary, 20, "Anna", 20, "Midfielder");
         Player player3 = new Player(calgary, 9, "Alan", 19, "Attacker");
         Player player4 = new Player(calgary, 1, "Louis", 19, "Goalkeeper");
-        JLabel calgaryIntro = new JLabel(calgary.getTeamName());
-        //TODO: Change colour to red
-        mainFrame.add(calgaryIntro);
+        calgary.printTeam();
         calgary.addPlayer(player1);
         calgary.addPlayer(player2);
         calgary.addPlayer(player3);
@@ -81,9 +68,7 @@ public class Main extends JFrame {
         Player player6 = new Player(toronto, 8, "Blues Midfielder", 40, "Midfielder");
         Player player7 = new Player(toronto, 9, "Blues Attacker", 40, "Attacker");
         Player player8 = new Player(toronto, 1, "Blues Goalkeeper", 36, "Goalkeeper");
-        JLabel torontoIntro = new JLabel(toronto.getTeamName());
-        //TODO: Change colour to blue
-        mainFrame.add(torontoIntro);
+        toronto.printTeam();
         toronto.addPlayer(player5);
         toronto.addPlayer(player6);
         toronto.addPlayer(player7);
@@ -96,9 +81,7 @@ public class Main extends JFrame {
         Player player10 = new Player(vancouver, 11, "Greens Attacker", 25, "Attacker");
         Player player11 = new Player(vancouver, 4, "Greens Defender", 30, "Defender");
         Player player12 = new Player(vancouver, 1, "Greens Goalkeeper", 26, "Goalkeeper");
-        JLabel vancouverIntro = new JLabel(vancouver.getTeamName());
-        //TODO: Change colour to green
-        mainFrame.add(vancouverIntro);
+        vancouver.printTeam();
         vancouver.addPlayer(player9);
         vancouver.addPlayer(player10);
         vancouver.addPlayer(player11);
@@ -115,106 +98,73 @@ public class Main extends JFrame {
         edmonton.addPlayer(player14);
         edmonton.addPlayer(player15);
         edmonton.addPlayer(player16);
-        JLabel edmontonIntro = new JLabel(edmonton.getTeamName());
-        //TODO: Change colour to orange
-        mainFrame.add(edmontonIntro);
+        edmonton.printTeam();
         lineBreaker();
 
-        CanadaSoccerLeague.initializeStandings();
-
-        JLabel ask = new JLabel("Would like to view team information? (Answer Y or N)");
-        mainFrame.add(ask);
-        JTextField yesOrNo = new JTextField(5);
-        mainFrame.add(yesOrNo);
-        JButton jButton = new JButton("Answer");
-        mainFrame.add(jButton);
-        jButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                try {
-                    if (!(yesOrNo.getText().equals("Y") || yesOrNo.getText().equals("N"))) {
-                        throw new InvalidInputException();
-                    }
-                } catch (InvalidInputException e) {
-                    ask.setText("Invalid input. Please try again. Use Y or N");
-                    ask.paintImmediately(ask.getVisibleRect());
-                }
-
-                if (yesOrNo.getText().equals("Y")) {
-                    JLabel jLabel = new JLabel("Select a team");
-                    mainFrame.add(jLabel);
-                    Team t = null;
-                    JTextField jTextField = new JTextField(10);
-                    try {
-                        t = CanadaSoccerLeague.lookForTeam(jTextField.getText());
-                    } catch (InvalidInputException e) {
-                        ask.setText("That team does not exist");
-                    }
-                    jLabel.setText(t.printTeamPlayers());
-                }
-                if (yesOrNo.getText().equals("N")) {
-                    mainFrame.removeAll();
-                }
-            }
-        });
-
-
-        UserManager userManager = new UserManager();
-        User user;
-
         while (true) {
-            System.out.println("Are you a new user? (Answer Y or N)");
-            String answer;
+            System.out.println("Would like to view team information? (Answer Y or N)");
+            String yesOrNo = null;
             try {
-                answer = scanner.nextLine();
-                if (!(answer.equals("Y") || (answer.equals("N")))) {
+                yesOrNo = scanner.nextLine();
+                if (!(yesOrNo.equals("Y") || yesOrNo.equals("N"))) {
                     throw new InvalidInputException();
                 }
             } catch (InvalidInputException e) {
                 System.out.println("Invalid input. Please try again");
-                continue;
             }
-            try {
-                userManager.setUsers(loadUser());
-            } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-            }
-            if (answer.equals("Y")) {
-                System.out.println("Please enter your name");
+            if (yesOrNo.equals("Y")) {
+                System.out.print("Select a team: ");
                 String input = scanner.nextLine();
-
-                user = new User(input);
-                userManager.addUser(user);
-                break;
-            } else {
+                Team t;
                 try {
-                    if (userManager.getUsers().size() == 0) {
-                        System.out.println("There are no existing players. Please make a new user");
-                        continue;
-                    }
-                    System.out.println("Please enter your name");
-                    String input = scanner.nextLine();
-
-                    user = userManager.lookForUser(input);
-                    break;
-                } catch (NothingFoundException e) {
-                    System.out.println("That user does not exist.");
+                    t = CanadaSoccerLeague.lookForTeam(input);
+                } catch (InvalidInputException e) {
+                    System.out.println("That team does not exist");
+                    continue;
                 }
+                t.printTeamPlayers();
+            }
+            if (yesOrNo.equals("N")) {
+                break;
+            }
+        }
+
+
+        UserManager userManager = new UserManager();
+        System.out.println("Are you a new user? (Answer Y or N)");
+        User user = null;
+        String answer = null;
+        try {
+            answer = scanner.nextLine();
+            if (!(answer.equals("Y") || (answer.equals("N")))) {
+                throw new InvalidInputException();
+            }
+        } catch (InvalidInputException e) {
+            System.out.println("Invalid input. Please try again");
+        }
+        try {
+            userManager.setUsers(loadUser());
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Please enter your name");
+        String input = scanner.nextLine();
+        if (answer.equals("Y")) {
+            user = new User(input);
+            userManager.addUser(user);
+        } else {
+            try {
+                user = userManager.lookForUser(input);
+                //Implement if user is not in the list. -> Redirect
+            } catch (NothingFoundException e) {
+                System.out.println("That user does not exist.");
             }
         }
         saveUser(userManager.getUsers());
 
-
         Game bet = new Game();
-        for (Team t : CanadaSoccerLeague.getTeams().values()) {
-            try {
-                t.setPoints(t.loadPointsStats());
-            } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-            }
-        }
         while (true) {
-            System.out.println("1.Bet 2.See Balance 3.View standings 4.Exit");
+            System.out.println("1.Bet 2.See Balance 3.Exit");
             int option = 0;
             try {
                 option = scanner.nextInt();
@@ -242,11 +192,9 @@ public class Main extends JFrame {
                 try {
                     int betAmount = scanner.nextInt();
                     bet.betting(betAmount);
-                    bet.startGame(CanadaSoccerLeague);
+                    bet.startGame();
                     saveAmount(bet);
                     saveBetStats(user, bet);
-                    for (Team t : CanadaSoccerLeague.getTeams().values())
-                        t.savePointsStats();
                 } catch (OutOfMoneyException e) {
                     System.out.println("Insufficient coins");
                 } catch (InvalidInputException e) {
@@ -260,16 +208,6 @@ public class Main extends JFrame {
             } else if (option == 2) {
                 System.out.println("Your balance is: " + bet.getAmount() + "coins :)");
             } else if (option == 3) {
-                for (Team t : CanadaSoccerLeague.getTeams().values()) {
-                    try {
-                        t.setPoints(t.loadPointsStats());
-                    } catch (ClassNotFoundException | IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                CanadaSoccerLeague.decideStandings();
-                CanadaSoccerLeague.displayStandings();
-            } else if (option == 4) {
                 break;
             } else
                 try {
@@ -278,17 +216,19 @@ public class Main extends JFrame {
                     System.out.println("Invalid input. Please try again");
                 }
         }
+
+
     }
 
-    public static void saveUser(HashMap<String, User> users) throws IOException {
+    public static void saveUser(List<User> users) throws IOException {
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("userlist.txt"));
         out.writeObject(users);
         out.close();
     }
 
-    public static HashMap<String, User> loadUser() throws IOException, ClassNotFoundException {
+    public static List<User> loadUser() throws IOException, ClassNotFoundException {
         ObjectInputStream in = new ObjectInputStream(new FileInputStream("userlist.txt"));
-        HashMap<String, User> users = (HashMap<String, User>) in.readObject();
+        List<User> users = (List<User>) in.readObject();
         in.close();
         return users;
     }
