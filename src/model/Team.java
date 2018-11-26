@@ -92,10 +92,12 @@ public class Team implements Serializable, Comparable<Team> {
     }
 
     //EFFECTS: prints out all players in a team
-    public void printTeamPlayers() {
+    public String printTeamPlayers() {
+        String string = null;
         for (Player player : players) {
-            System.out.println("Name: " + player.getPlayerName() + " Number: " + player.getBackNumber());
+            string+="Name: " + player.getPlayerName() + " Number: " + player.getBackNumber()+"";
         }
+        return string;
     }
 
     private Player lookForPlayer(String input) throws NothingFoundException {
