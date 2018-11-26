@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Player {
+public class Player implements Serializable {
     private Team playerTeam;
     private String playerName;
     private int age;
@@ -10,8 +11,6 @@ public class Player {
     private String position;
     private int numApperances;
     private int numGoals;
-
-    Scanner scanner = new Scanner(System.in);
 
     public Player(Team playerTeam, int backNumber, String playerName, int age, String position) {
         this.playerTeam = playerTeam;
@@ -35,9 +34,24 @@ public class Player {
         return playerTeam;
     }
 
+    public String getPosition() {
+        return position;
+    }
+
+    public int getNumApperances() {
+        return numApperances;
+    }
+
+    public int getNumGoals() {
+        return numGoals;
+    }
+
     public void scoreGoal() {
-        System.out.println(playerName + "has scored a goal!");
+        System.out.println(playerName + " has scored a goal!");
         numGoals++;
     }
 
+    public void addAppearance(){
+        numApperances++;
+    }
 }

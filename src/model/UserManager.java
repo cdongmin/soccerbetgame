@@ -2,25 +2,22 @@ package model;
 
 import Exceptions.NothingFoundException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class UserManager {
     private Set<Observer> observers;
-    private List<User> users;
+    private HashMap<String, User> users;
 
-    public UserManager(){
+    public UserManager() {
         observers = new HashSet<>();
-        users = new ArrayList<>();
+        users = new HashMap<>();
     }
 
-    public List<User> getUsers() {
+    public HashMap<String, User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(HashMap<String, User> users) {
         this.users = users;
     }
 
@@ -29,29 +26,35 @@ public class UserManager {
             observers.add(o);
     }
 
-    public void removeObserver(Observer o){
-        if(observers.contains(o))
+    public void removeObserver(Observer o) {
+        if (observers.contains(o))
             observers.remove(o);
     }
 
-    public void addUser(User user){
-        users.add(user);
+    public void addUser(User user) {
+        if (!users.containsKey(user.getName()))
+            users.put(user.getName(), user);
     }
 
 
-    public void notifyObservers(Team t, Bet b){
-        for(Observer o:observers)
-            o.update(t,b);
+    public void notifyObservers(Team t, Bet b) {
+        for (Observer o : observers)
+            o.update(t, b);
     }
 
-    public void notifyObserversResult(Game b){
-        for(Observer o:observers)
+    public void notifyObserversResult(Game b) {
+        for (Observer o : observers)
             o.updateResult(b);
     }
 
     public User lookForUser(String input) throws NothingFoundException {
+        if (users.containsKey(input))
+            return users.get(input);
+        else
+            throw new NothingFoundException();
+        /*
         User aUser = null;
-        for (User user: users) {
+        for (User user : users) {
             if (input.equals(user.getName()))
                 aUser = user;
         }
@@ -59,5 +62,6 @@ public class UserManager {
             throw new NothingFoundException();
         }
         return aUser;
+        */
     }
 }
