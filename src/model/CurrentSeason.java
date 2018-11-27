@@ -7,7 +7,7 @@ public class CurrentSeason {
         this.year = year;
     }
 
-    public void makeSeason() {
-        System.out.println("Season: " + year);
+    public String makeSeason() {
+        return ("Season: " + year);
     }
 }

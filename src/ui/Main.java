@@ -4,12 +4,8 @@ import Exceptions.InvalidInputException;
 import Exceptions.NothingFoundException;
 import Exceptions.OutOfMoneyException;
 import Exceptions.WrongChoiceException;
-import GUI.MainFrame;
 import model.*;
-
 import java.awt.event.*;
-import javax.swing.event.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -18,18 +14,15 @@ import java.util.*;
 import java.net.URL;
 
 public class Main extends JFrame {
-    private JLabel jLabel;
-    private JTextField jTextField;
-
     public static void main(String[] args) throws IOException {
         JFrame mainFrame = new JFrame();
-        mainFrame.setTitle("Canada Soccer League Bet");
+        mainFrame.setTitle("Canada Soccer League");
         mainFrame.setSize(2000, 450);
         mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        ImageIcon image = new ImageIcon("C:\\Users\\Min\\Downloads\\1200px-Canadian_Soccer_Association_logo.svg.png");
         mainFrame.setLayout(new FlowLayout());
-        //MainFrame mainFrame = new MainFrame();
         Standings CanadaSoccerLeague = new Standings();
         CanadaSoccerLeague.setName("Canada Soccer League");
         Scanner scanner = new Scanner(System.in);
@@ -52,14 +45,23 @@ public class Main extends JFrame {
             }
         }
 
+        JPanel seasonPanel = new JPanel();
+        JLabel soccerPic = new JLabel("",image,JLabel.CENTER);
+        seasonPanel.setLayout(new BoxLayout(seasonPanel, BoxLayout.PAGE_AXIS));
+        seasonPanel.add(soccerPic);
         CurrentSeason season = new CurrentSeason(2018);
-        season.makeSeason();
+        JLabel seasonLabel = new JLabel(season.makeSeason());
+        seasonPanel.add(seasonLabel);
 
         JLabel welcome = new JLabel("Welcome!");
-        mainFrame.add(welcome);
+        seasonPanel.add(welcome);
         lineBreaker();
+        mainFrame.add(seasonPanel);
 
+        JPanel introducePanel = new JPanel();
+        introducePanel.setLayout(new BoxLayout(introducePanel, BoxLayout.PAGE_AXIS));
         JLabel introduce = new JLabel("===Participating Teams===");
+        introducePanel.add(introduce);
         Team calgary = new Team("Calgary Reds", Color.red);
         CanadaSoccerLeague.addTeam(calgary);
         Player player1 = new Player(calgary, 5, "Min", 19, "Defender");
@@ -67,8 +69,8 @@ public class Main extends JFrame {
         Player player3 = new Player(calgary, 9, "Alan", 19, "Attacker");
         Player player4 = new Player(calgary, 1, "Louis", 19, "Goalkeeper");
         JLabel calgaryIntro = new JLabel(calgary.getTeamName());
-        //TODO: Change colour to red
-        mainFrame.add(calgaryIntro);
+        calgaryIntro.setForeground(Color.red);
+        introducePanel.add(calgaryIntro);
         calgary.addPlayer(player1);
         calgary.addPlayer(player2);
         calgary.addPlayer(player3);
@@ -82,8 +84,8 @@ public class Main extends JFrame {
         Player player7 = new Player(toronto, 9, "Blues Attacker", 40, "Attacker");
         Player player8 = new Player(toronto, 1, "Blues Goalkeeper", 36, "Goalkeeper");
         JLabel torontoIntro = new JLabel(toronto.getTeamName());
-        //TODO: Change colour to blue
-        mainFrame.add(torontoIntro);
+        torontoIntro.setForeground(Color.blue);
+        introducePanel.add(torontoIntro);
         toronto.addPlayer(player5);
         toronto.addPlayer(player6);
         toronto.addPlayer(player7);
@@ -97,8 +99,8 @@ public class Main extends JFrame {
         Player player11 = new Player(vancouver, 4, "Greens Defender", 30, "Defender");
         Player player12 = new Player(vancouver, 1, "Greens Goalkeeper", 26, "Goalkeeper");
         JLabel vancouverIntro = new JLabel(vancouver.getTeamName());
-        //TODO: Change colour to green
-        mainFrame.add(vancouverIntro);
+        vancouverIntro.setForeground(Color.green);
+        introducePanel.add(vancouverIntro);
         vancouver.addPlayer(player9);
         vancouver.addPlayer(player10);
         vancouver.addPlayer(player11);
@@ -116,18 +118,51 @@ public class Main extends JFrame {
         edmonton.addPlayer(player15);
         edmonton.addPlayer(player16);
         JLabel edmontonIntro = new JLabel(edmonton.getTeamName());
-        //TODO: Change colour to orange
-        mainFrame.add(edmontonIntro);
+        edmontonIntro.setForeground(Color.orange);
+        introducePanel.add(edmontonIntro);
         lineBreaker();
+        mainFrame.add(introducePanel);
 
         CanadaSoccerLeague.initializeStandings();
 
+        /*
+        while (true) {
+            System.out.println("Would like to view team information? (Answer Y or N)");
+            String yesOrNo = null;
+            try {
+                yesOrNo = scanner.nextLine();
+                if (!(yesOrNo.equals("Y") || yesOrNo.equals("N"))) {
+                    throw new InvalidInputException();
+                }
+            } catch (InvalidInputException e) {
+                System.out.println("Invalid input. Please try again");
+            }
+            if (yesOrNo.equals("Y")) {
+                System.out.print("Select a team: ");
+                String input = scanner.nextLine();
+                Team t;
+                try {
+                    t = CanadaSoccerLeague.lookForTeam(input);
+                } catch (InvalidInputException e) {
+                    System.out.println("That team does not exist");
+                    continue;
+                }
+                t.printTeamPlayers();
+            }
+            if (yesOrNo.equals("N")) {
+                break;
+            }
+        }
+        */
+        
+        JPanel teaminfo = new JPanel();
         JLabel ask = new JLabel("Would like to view team information? (Answer Y or N)");
-        mainFrame.add(ask);
+        teaminfo.add(ask);
         JTextField yesOrNo = new JTextField(5);
-        mainFrame.add(yesOrNo);
+        teaminfo.add(yesOrNo);
         JButton jButton = new JButton("Answer");
-        mainFrame.add(jButton);
+        teaminfo.add(jButton);
+        GUI.ComboBox comboBox = new GUI.ComboBox(CanadaSoccerLeague);
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -141,27 +176,24 @@ public class Main extends JFrame {
                 }
 
                 if (yesOrNo.getText().equals("Y")) {
-                    JLabel jLabel = new JLabel("Select a team");
-                    mainFrame.add(jLabel);
-                    Team t = null;
-                    JTextField jTextField = new JTextField(10);
-                    try {
-                        t = CanadaSoccerLeague.lookForTeam(jTextField.getText());
-                    } catch (InvalidInputException e) {
-                        ask.setText("That team does not exist");
+                    ask.setText("Type N when you are done.");
+                    if (comboBox.getParent() == null) {
+                        teaminfo.add(comboBox);
+
                     }
-                    jLabel.setText(t.printTeamPlayers());
                 }
                 if (yesOrNo.getText().equals("N")) {
-                    mainFrame.removeAll();
+                    mainFrame.remove(teaminfo);
+                    mainFrame.revalidate();
+                    mainFrame.repaint();
                 }
             }
         });
-
+        mainFrame.add(teaminfo);
+        mainFrame.pack();
 
         UserManager userManager = new UserManager();
         User user;
-
         while (true) {
             System.out.println("Are you a new user? (Answer Y or N)");
             String answer;
@@ -194,7 +226,6 @@ public class Main extends JFrame {
                     }
                     System.out.println("Please enter your name");
                     String input = scanner.nextLine();
-
                     user = userManager.lookForUser(input);
                     break;
                 } catch (NothingFoundException e) {
