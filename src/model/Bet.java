@@ -63,6 +63,7 @@ public class Bet extends UserManager {
     public void gameOver() {
         assert (amount == 0);
         System.out.println("GAME OVER");
+        System.exit(0);
     }
 }
 

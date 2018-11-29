@@ -53,13 +53,13 @@ public class Game extends Bet {
         try {
             betTeam.setPlayers(loadTeamStats(betTeam));
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("");
         }
         oppositionTeam = selectOppositionTeam(league.getTeams());
         try {
             oppositionTeam.setPlayers(loadTeamStats(oppositionTeam));
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("");
         }
         addAppearance();
         setBetTeamScore();
@@ -72,12 +72,12 @@ public class Game extends Bet {
         try {
             savePlayersStats(betTeam);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("");
         }
         try {
             savePlayersStats(oppositionTeam);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("");
         }
         System.out.println("Your team's score: " + betTeamScore + " vs. Opponent team's score: " + oppositionScore);
         if (wonOrNot) {
@@ -94,8 +94,6 @@ public class Game extends Bet {
                 gameOver();
             }
         }
-        for (Player p : betTeam.getPlayers())
-            System.out.println(p.getNumApperances());
     }
 
     public Team selectOppositionTeam(HashMap<String, Team> league) {

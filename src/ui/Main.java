@@ -21,7 +21,7 @@ public class Main extends JFrame {
         mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        ImageIcon image = new ImageIcon("C:\\Users\\Min\\Downloads\\1200px-Canadian_Soccer_Association_logo.svg.png");
+        ImageIcon image = new ImageIcon("C:\\Users\\Min\\Downloads\\rsz_1rsz_1200px-canadian_soccer_association_logosvg.png");
         mainFrame.setLayout(new FlowLayout());
         Standings CanadaSoccerLeague = new Standings();
         CanadaSoccerLeague.setName("Canada Soccer League");
@@ -154,7 +154,7 @@ public class Main extends JFrame {
             }
         }
         */
-        
+
         JPanel teaminfo = new JPanel();
         JLabel ask = new JLabel("Would like to view team information? (Answer Y or N)");
         teaminfo.add(ask);
@@ -209,7 +209,7 @@ public class Main extends JFrame {
             try {
                 userManager.setUsers(loadUser());
             } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
+                System.out.println("");
             }
             if (answer.equals("Y")) {
                 System.out.println("Please enter your name");
@@ -241,11 +241,19 @@ public class Main extends JFrame {
             try {
                 t.setPoints(t.loadPointsStats());
             } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-            }
+                System.out.println("");            }
         }
         while (true) {
             System.out.println("1.Bet 2.See Balance 3.View standings 4.Exit");
+            try {
+                bet.setAmount(loadBet());
+                if(bet.getAmount()==0) {
+                    System.out.println("You have zero coins");
+                    bet.gameOver();
+                }
+            } catch (ClassNotFoundException | IOException e) {
+                System.out.println("");
+            }
             int option = 0;
             try {
                 option = scanner.nextInt();
@@ -255,11 +263,6 @@ public class Main extends JFrame {
             scanner.nextLine();
             if (option == 1) {
                 bet.addObserver(user);
-                try {
-                    bet.setAmount(loadBet());
-                } catch (ClassNotFoundException | IOException e) {
-                    e.printStackTrace();
-                }
                 System.out.print("Select the team you want to bet on: ");
                 String selectTeam = scanner.nextLine();
                 try {
@@ -295,13 +298,13 @@ public class Main extends JFrame {
                     try {
                         t.setPoints(t.loadPointsStats());
                     } catch (ClassNotFoundException | IOException e) {
-                        e.printStackTrace();
+                        System.out.println("");
                     }
                 }
                 CanadaSoccerLeague.decideStandings();
                 CanadaSoccerLeague.displayStandings();
             } else if (option == 4) {
-                break;
+                System.exit(0);
             } else
                 try {
                     throw new WrongChoiceException();
